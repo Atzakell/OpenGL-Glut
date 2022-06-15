@@ -1,54 +1,115 @@
 #include <stdlib.h>
 #include <math.h>
-#include <glut.h>
+#include <GL/glut.h>
 
+void ejes2D(void);
+void bordecirculo(int,int,int);
+void circulo(int,int,int);
+void caracol(void);
 void init(void);
 void display(void);
-void reshape(int, int);
+void reshape(int,int);
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB); // renderizar, usar buffer para colores
-    // buffer(GLUT_SINGLE) doble buffer(GLUT_DOUBLE)
-    glutInitWindowSize(250, 250);     // medidas de la ventana
-    glutInitWindowPosition(100, 100); // punto de origen (x0,y0)
-    glutCreateWindow("Taller01");     // dar nombre a la ventana
+    glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+    glutInitWindowSize(1000,800);
+    glutInitWindowPosition(100,100);
+    glutCreateWindow(argv[0]);
     init();
-    glutDisplayFunc(reshape); // cada vez que se redibuje llame a la funcion dibujar
-    glutMainLoop();           // siempore va al final del main
-
+    char p;
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutMainLoop();
     return 0;
 }
 
 void init(void)
 {
-    glClearColor(0.0, 0.0, 0.0, 0.0); // parametro, rojo, amarillo y azul, el cuarto es alpha
-    glShadeModel(GL_FLAT);            // glClear(borrar buffer)
+glClearColor(1.0,1,1,0);
 }
 
 void display(void)
 {
-    GLfloat ang, radio = 8.0f, x, y;
-    glClear(GL_COLOR_BUFFER_BIT); // borra un buffer o la combinacion de varios
-    glPushMatrix();               // colocar una matrix en la pila de matrices actual
-    glBegin(GL_POINTS);
-    for (ang = 0.0f; ang < 2 + GL_PI; ang += GL_PI / 5)
-    {
-        x = radio + sin(ang);
-        y = radio + cos(ang);
-        glVertex2f(x, y);
-    }
-    glEnd();
-    GLfloat ang, radio = 8.0f, x, y;
-}
 
+    glClear(GL_COLOR_BUFFER_BIT);
+    glPushMatrix();
+    glPointSize(2);
+    glColor3f(0,0,1);
+    ejes2D();
+    glColor3f(1,0,0);
+    caracol();
+    glColor3f(1,0,0);
+    bordecirculo(0,5,4);
+
+    glLineWidth(5);
+    glColor3f(0,0,1);
+    glLineStipple(2,0xAAAA);
+    glEnable(GL_LINE_STIPPLE);
+    bordecirculo(5,-5,5);
+    glDisable(GL_LINE_STIPPLE);
+
+    glColor3f(0,1,0);
+    circulo(-5,-5,5);
+    glPopMatrix();      // reecupera el estado del matriz
+    glFlush();
+}
 void reshape(int w, int h)
 {
-    glViewport(0, 0, (GLsizei)w, (GLsizei)h);     // define un area rectangula w y h son ancho y altura
-    glMatrixMode(GL_PROJECTION);                  // activar matriz a proyectar
-    glLoadIdentity();                             // limpiar matriz de proyeccion
-    glOrtho(-10.0, -10.0, 10.0, 10, -10.0, 10.0); // manera en como se va a proyectar eliminando la coordenada z o profundidad
-    glMatrixMode(GL_MODELVIEW);                   // que pila de matrices usará
+    glViewport(0,0,(GLsizei)w, (GLsizei)h);
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+    glOrtho(-10.0,10.0,-10.0,10,-10.0,10.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+void bordecirculo(int h,int k,int radio)
+{
+GLfloat ang, x, y;
+    glBegin(GL_LINE_LOOP);
+        for (ang = 0.0f; ang < 2 * M_PI; ang += 2*M_PI/100)
+            {
+            x = h+radio * cos(ang);
+            y = k+radio * sin(ang);
+            glVertex2f(x,y);
+            }
+    glEnd();
+}
+
+void circulo(int h,int k,int radio)
+{
+GLfloat ang, x, y;
+    glBegin(GL_POLYGON);
+        for (ang = 0.0f; ang < 2 * M_PI; ang += 2*M_PI/10)
+            {
+            x = h+radio * cos(ang);
+            y = k+radio * sin(ang);
+            glVertex2f(x,y);
+            }
+    glEnd();
+}
+
+void ejes2D(void)
+{
+    glBegin(GL_LINES);
+        glVertex2f(-50,0);
+        glVertex2f(50,0);
+        glVertex2f(0,50);
+        glVertex2f(0,-50);
+    glEnd();
+}
+
+void caracol(void)
+{
+GLfloat ang,radio, x, y;
+    glBegin(GL_LINE_LOOP);
+        for (ang = 0.0f; ang < 2 * M_PI; ang += 2*M_PI/100)
+            {
+            radio=2+4*sin(ang);
+            x = radio * cos(ang);
+            y = radio * sin(ang);
+            glVertex2f(x,y);
+            }
+    glEnd();
 }
