@@ -1,7 +1,3 @@
-/*
-ALUMNOS: Blas Mu�oa Joao Lestter y Diego Akira Alvarado Arroyo
-FECHA: 08/06/2022 HORA: 9:44 pm
-*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -21,7 +17,6 @@ void iniciar()
     glLineWidth(2.0);
     glShadeModel(GL_FLAT);
 }
-//---------------------------------------------------------
 //Declaramos la funcion de dibujar
 void display(void)
 {
@@ -34,7 +29,7 @@ void display(void)
     glFlush();
     glutSwapBuffers();
 }
-//---------------------------------------------------------
+//FUncion de redibujado
 void myReshape(int w, int h)
 {
     glViewport(0,0,(GLsizei)w, (GLsizei)h);
